@@ -1,6 +1,6 @@
 from rich.console import Console
 from rich.table import Table
-from orders.crud import find_all
+from sales.crud import find_all
 from datetime import datetime
 from collections import defaultdict
 
@@ -38,7 +38,10 @@ def sales_by_status():
             status = venda.get("status", "UNKNOWN")
             grupos[status] = grupos.get(status, 0) + 1
 
-            total = venda.get("totalValue", 0)
+            try:
+                total = float(venda.get("totalValue", 0) or 0)
+            except (ValueError, TypeError):
+                total = 0.0
             valores_por_status[status] = valores_por_status.get(status, 0) + total
 
         total_vendas = sum(grupos.values())
@@ -108,7 +111,11 @@ def sales_by_date():
                 mes_ano = data.strftime("%Y-%m")
 
                 grupos[mes_ano] += 1
-                valores_por_mes[mes_ano] += venda.get("totalValue", 0)
+                try:
+                    valor = float(venda.get("totalValue", 0) or 0)
+                except (ValueError, TypeError):
+                    valor = 0.0
+                valores_por_mes[mes_ano] += valor
             except (ValueError, AttributeError):
                 continue
 
@@ -118,7 +125,7 @@ def sales_by_date():
 
         grupos_ordenados = sorted(grupos.items())
 
-        max_num = max(grupos.values())
+        max_valor = max(valores_por_mes.values())
 
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("Mês/Ano", style="bold")
@@ -127,8 +134,11 @@ def sales_by_date():
         table.add_column("Gráfico")
 
         for i, (mes_ano, num) in enumerate(grupos_ordenados):
-            barra = "■" * int((num / max_num) * 50)
             valor = valores_por_mes[mes_ano]
+            if max_valor > 0:
+                barra = "■" * int((valor / max_valor) * 50)
+            else:
+                barra = ""
 
             try:
                 data_obj = datetime.strptime(mes_ano, "%Y-%m")
@@ -181,7 +191,11 @@ def sales_by_day():
                 dia = data.strftime("%Y-%m-%d")
 
                 grupos[dia] += 1
-                valores_por_dia[dia] += venda.get("totalValue", 0)
+                try:
+                    valor = float(venda.get("totalValue", 0) or 0)
+                except (ValueError, TypeError):
+                    valor = 0.0
+                valores_por_dia[dia] += valor
             except (ValueError, AttributeError):
                 continue
 
@@ -191,7 +205,7 @@ def sales_by_day():
 
         grupos_ordenados = sorted(grupos.items())[-30:]
 
-        max_num = max([grupos[dia] for dia, _ in grupos_ordenados])
+        max_valor = max([valores_por_dia[dia] for dia, _ in grupos_ordenados])
 
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("Data", style="bold")
@@ -200,8 +214,11 @@ def sales_by_day():
         table.add_column("Gráfico")
 
         for i, (dia, num) in enumerate(grupos_ordenados):
-            barra = "■" * int((num / max_num) * 40)
             valor = valores_por_dia[dia]
+            if max_valor > 0:
+                barra = "■" * int((valor / max_valor) * 40)
+            else:
+                barra = ""
 
             try:
                 data_obj = datetime.strptime(dia, "%Y-%m-%d")

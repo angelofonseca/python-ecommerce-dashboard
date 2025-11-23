@@ -7,21 +7,21 @@ from products.product import list_products
 from products.graphs import products_by_brand
 from products.graphs import products_by_category
 from products.graphs import products_by_price_range
-from orders.graphs import sales_by_status
-from orders.graphs import sales_by_date
-from orders.graphs import sales_by_day
-from orders.order import create_sale
-from orders.order import cancel_sale
-from orders.order import list_sales
-from orders.order import update_sale_status
+from sales.graphs import sales_by_status
+from sales.graphs import sales_by_date
+from sales.graphs import sales_by_day
+from sales.sale import create_sale
+from sales.sale import cancel_sale
+from sales.sale import list_sales
+from sales.sale import update_sale_status
 
 
 console = Console()
 
 
 while True:
-    console.print("[purple3]1. Cadastro de Produtos")
-    console.print("[purple3]2. Cadastro de Vendas")
+    console.print("[purple3]1. Produtos")
+    console.print("[purple3]2. Vendas")
     console.print("[purple3]3. Pesquisas Avançadas")
     console.print("[purple3]4. Gráficos")
     console.print("[purple3]5. Finalizar")

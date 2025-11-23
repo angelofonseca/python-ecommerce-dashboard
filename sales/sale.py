@@ -1,7 +1,7 @@
 from rich.prompt import Prompt, IntPrompt, Confirm
 from rich.console import Console
 from rich.table import Table
-from orders import crud
+from sales import crud
 from products import crud as product_crud
 
 console = Console()

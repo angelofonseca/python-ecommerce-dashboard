@@ -130,7 +130,7 @@ def update_product():
         "price": float(price),
     }
 
-    success, message = crud.update(product_id, product_data)
+    success, message = crud.update_by_id(product_id, product_data)
 
     if success:
         print(f"\n✅ {message}")
@@ -170,7 +170,7 @@ def delete_product():
         print("\n❌ Operação cancelada.")
         return
 
-    success, message = crud.delete(product_id)
+    success, message = crud.delete_by_id(product_id)
 
     if success:
         print(f"\n✅ {message}")

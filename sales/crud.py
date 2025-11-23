@@ -2,8 +2,6 @@ import requests
 
 create_url = "http://localhost:8080/checkout/create-session"
 sales_url = "http://localhost:8080/sales"
-url = "http://localhost:8080/checkout/orders"
-update_url = "http://localhost:8080/sales"
 
 
 def create(sale_data):
@@ -20,16 +18,6 @@ def create(sale_data):
 
 
 def find_all(params=None):
-    """
-    Busca todas as vendas com filtros opcionais.
-
-    Args:
-        params: Dicionário com parâmetros de busca (opcional)
-        Exemplos: {"userId": 1, "status": "PAID"}
-
-    Returns:
-        Lista de vendas ou None em caso de erro
-    """
     if params is None:
         params = {}
 
@@ -48,15 +36,6 @@ def find_all(params=None):
 
 
 def find_by_id(sale_id):
-    """
-    Busca uma venda específica por ID.
-
-    Args:
-        sale_id: ID da venda
-
-    Returns:
-        Dicionário com dados da venda ou None em caso de erro
-    """
     try:
         response = requests.get(f"{sales_url}/{sale_id}")
         response.raise_for_status()
@@ -74,7 +53,7 @@ def find_by_id(sale_id):
 def update_status(sale_id, new_status):
     try:
         response = requests.patch(
-            f"{update_url}/{sale_id}/status", json={"status": new_status}
+            f"{sales_url}/{sale_id}/status", json={"status": new_status}
         )
         response.raise_for_status()
 
@@ -88,7 +67,7 @@ def update_status(sale_id, new_status):
 
 def cancel(sale_id):
     try:
-        response = requests.delete(f"{url}/{sale_id}")
+        response = requests.delete(f"{sales_url}/{sale_id}")
         response.raise_for_status()
 
         if response.status_code in [200, 204]:
