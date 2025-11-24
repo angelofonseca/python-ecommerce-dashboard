@@ -116,7 +116,7 @@ def create_sale():
     total = sum(item["quantity"] * item["priceUnit"] for item in items)
     console.print(f"\n[bold green]Valor Total: R$ {total:.2f}[/bold green]")
     print(items)
-    confirm = Confirm.ask("\n[bold]Confirmar criação da venda?[/bold]", default=True)
+    confirm = Confirm.ask("\n[bold]Confirmar criação do Pedido?[/bold]", default=True)
     if not confirm:
         console.print("\n[red]❌ Operação cancelada.[/red]")
         return
