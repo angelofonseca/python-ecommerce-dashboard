@@ -21,7 +21,7 @@ console = Console()
 
 while True:
     console.print("[purple3]1. Produtos")
-    console.print("[purple3]2. Vendas")
+    console.print("[purple3]2. Pedidos")
     console.print("[purple3]3. Pesquisas Avançadas")
     console.print("[purple3]4. Gráficos")
     console.print("[purple3]5. Finalizar")
@@ -70,11 +70,11 @@ while True:
             search_products()
     elif opcao == 4:
         print()
-        console.rule("Gráficos de Produtos e Vendas")
+        console.rule("Gráficos de Produtos e Pedidos/Vendas")
         console.print("1. Produtos por Marca", style="dark_orange3")
         console.print("2. Produtos por Categoria", style="dark_orange3")
         console.print("3. Produtos por Faixa de Preço", style="dark_orange3")
-        console.print("4. Vendas por Status", style="dark_orange3")
+        console.print("4. Pedidos por Status", style="dark_orange3")
         console.print("5. Vendas por Mês", style="dark_orange3")
         console.print("6. Vendas por Dia", style="dark_orange3")
         console.print("7. Retornar", style="dark_orange3")

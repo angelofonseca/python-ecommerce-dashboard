@@ -6,7 +6,6 @@ from products import crud as product_crud
 
 console = Console()
 
-
 def create_sale():
     console.print("\n[bold cyan]=== Criar Nova Venda ===[/bold cyan]\n")
 
@@ -134,12 +133,12 @@ def create_sale():
 
 
 def list_sales():
-    console.print("\n[bold cyan]=== Lista de Vendas ===[/bold cyan]\n")
+    console.print("\n[bold cyan]=== Lista de Pedidos ===[/bold cyan]\n")
 
     sales = crud.find_all()
 
     if sales is None:
-        console.print("\n[red]❌ Não foi possível buscar vendas.[/red]")
+        console.print("\n[red]❌ Não foi possível buscar os pedidos.[/red]")
         return
 
     if not sales:
@@ -147,56 +146,6 @@ def list_sales():
         return
 
     _display_sales(sales)
-
-
-def search_sales_by_user():
-    title = "\n[bold cyan]=== Buscar Vendas por Usuário ===[/bold cyan]\n"
-    console.print(title)
-
-    user_id = IntPrompt.ask("ID do usuário")
-
-    sales = crud.find_by_user(user_id)
-
-    if sales is None:
-        console.print("\n[red]❌ Erro ao buscar vendas.[/red]")
-        return
-
-    if not sales:
-        console.print(
-            f"\n[yellow]⚠️  Nenhuma venda encontrada para o usuário {user_id}.[/yellow]"
-        )
-        return
-
-    _display_sales(sales)
-
-
-def search_sales_by_status():
-    console.print("\n[bold cyan]=== Buscar Vendas por Status ===[/bold cyan]\n")
-
-    console.print("[yellow]Status disponíveis:[/yellow]")
-    console.print("1. PENDING")
-    console.print("2. PROCESSING")
-    console.print("3. PAID")
-    console.print("4. CANCELLED")
-    console.print("5. REFUNDED")
-
-    choice = IntPrompt.ask("Escolha o status", choices=["1", "2", "3", "4", "5"])
-
-    statuses = {1: "PENDING", 2: "PROCESSING", 3: "PAID", 4: "CANCELLED", 5: "REFUNDED"}
-    status = statuses[choice]
-
-    sales = crud.find_by_status(status)
-
-    if sales is None:
-        console.print("\n[red]❌ Erro ao buscar vendas.[/red]")
-        return
-
-    if not sales:
-        console.print(f"\n[yellow]⚠️  Nenhuma venda com status {status}.[/yellow]")
-        return
-
-    _display_sales(sales)
-
 
 def update_sale_status():
     console.print("\n[bold cyan]=== Atualizar Status da Venda ===[/bold cyan]\n")
@@ -281,81 +230,6 @@ def cancel_sale():
         console.print(f"\n[green]✅ {message}[/green]")
     else:
         console.print(f"\n[red]❌ {message}[/red]")
-
-
-def view_sale_details():
-    console.print("\n[bold cyan]=== Detalhes da Venda ===[/bold cyan]\n")
-
-    sale_id = IntPrompt.ask("ID da venda")
-
-    sale = crud.find_by_id(sale_id)
-
-    if sale is None:
-        console.print("\n[red]❌ Erro ao buscar venda.[/red]")
-        return
-
-    if not sale:
-        console.print(f"\n[yellow]⚠️  Venda com ID {sale_id} não encontrada.[/yellow]")
-        return
-
-    if "user" in sale and sale["user"]:
-        console.print("\n[bold cyan]━━━ Cliente ━━━[/bold cyan]")
-        console.print(f"[bold]Nome:[/bold] {sale['user'].get('name', 'N/A')}")
-        console.print(f"[bold]Email:[/bold] {sale['user'].get('email', 'N/A')}")
-        console.print(f"[bold]ID:[/bold] {sale['userId']}")
-    else:
-        console.print(f"\n[bold]Usuário ID:[/bold] {sale['userId']}")
-
-    console.print("\n[bold cyan]━━━ Venda ━━━[/bold cyan]")
-    console.print(f"[bold]ID da Venda:[/bold] {sale['id']}")
-    console.print(f"[bold]Status:[/bold] [yellow]{sale['status']}[/yellow]")
-    console.print(f"[bold]Criado em:[/bold] {sale['createdAt']}")
-
-    console.print("\n[bold cyan]━━━ Pagamento ━━━[/bold cyan]")
-    console.print(f"[bold]Método:[/bold] {sale.get('paymentMethod', 'N/A')}")
-    console.print(
-        f"[bold]Valor Total:[/bold] [green]R$ {float(sale['totalValue']):.2f}[/green]"
-    )
-
-    if sale.get("paidAt"):
-        console.print(f"[bold]Pago em:[/bold] {sale['paidAt']}")
-
-    console.print("\n[bold cyan]━━━ Entrega ━━━[/bold cyan]")
-    console.print(f"[bold]Endereço:[/bold] {sale['shippingAddress']}")
-
-    if "orders" in sale and sale["orders"]:
-        console.print(
-            f"\n[bold cyan]━━━ Itens do Pedido ({len(sale['orders'])}) ━━━[/bold cyan]"
-        )
-
-        table = Table(show_header=True, header_style="bold magenta")
-        table.add_column("ID", style="dim", justify="right", width=4)
-        table.add_column("Produto", style="cyan", width=30)
-        table.add_column("Qtd", justify="right", width=5)
-        table.add_column("Preço Unit.", justify="right", width=12)
-        table.add_column("Subtotal", justify="right", style="green", width=12)
-
-        for order in sale["orders"]:
-            product_name = "N/A"
-            if "product" in order and order["product"]:
-                product_name = order["product"].get("name", f"ID: {order['productId']}")
-            else:
-                product_name = f"ID: {order['productId']}"
-
-            table.add_row(
-                str(order["productId"]),
-                product_name,
-                str(order["quantity"]),
-                f"R$ {float(order['priceUnit']):.2f}",
-                f"R$ {float(order['subtotal']):.2f}",
-            )
-
-        console.print(table)
-        console.print(f"\n[bold]Total de Itens:[/bold] {len(sale['orders'])}")
-        console.print(
-            f"[bold green]Valor Total:[/bold green] R$ {float(sale['totalValue']):.2f}"
-        )
-
 
 def _display_sales(sales):
     console.print(f"\n[bold]{len(sales)} venda(s) encontrada(s):[/bold]\n")

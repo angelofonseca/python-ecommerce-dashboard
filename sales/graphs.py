@@ -105,6 +105,8 @@ def sales_by_date():
             created_at = venda.get("createdAt")
             if not created_at:
                 continue
+            if venda.get("status") != "PAID":
+                continue
 
             try:
                 data = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
@@ -184,6 +186,8 @@ def sales_by_day():
         for venda in vendas:
             created_at = venda.get("createdAt")
             if not created_at:
+                continue
+            if venda.get("status") != "PAID":
                 continue
 
             try:
