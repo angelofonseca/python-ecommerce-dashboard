@@ -1,4 +1,4 @@
-from rich.prompt import Prompt
+from rich.prompt import Prompt, Confirm
 from rich.console import Console
 from rich.table import Table
 from helper.helper import free_shipping_conversion
@@ -160,13 +160,11 @@ def delete_product():
     print(f"  Marca: {current_product['brand']['name']}")
     print(f"  Preço: R$ {current_product['price']:.2f}")
 
-    confirm = (
-        Prompt.ask("\n⚠️  Tem certeza que deseja deletar este produto? (sim/não)")
-        .strip()
-        .lower()
+    confirm = Confirm.ask(
+        "\n⚠️  Tem certeza que deseja deletar este produto?", default=False
     )
 
-    if confirm not in ["sim", "s"]:
+    if not confirm:
         print("\n❌ Operação cancelada.")
         return
 

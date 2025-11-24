@@ -47,7 +47,7 @@ while True:
         print()
         console.rule("Pedidos")
         console.print("1. Novo", style="green3")
-        console.print("2. Cancelar Pedido", style="green3")
+        console.print("2. Cancelar", style="green3")
         console.print("3. Pedidos", style="green3")
         console.print("4. Atualizar Status", style="green3")
         console.print("5. Retornar", style="chartreuse4")
